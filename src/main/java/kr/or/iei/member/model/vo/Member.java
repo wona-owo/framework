@@ -5,11 +5,30 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 public class Member {
+	private String memberNo;
+	private String memberId;
+	private String memberPw;
+	private String memberName;
+	private String memberEmail;
+	private String memberAddr;
+	private int memberLevel;
+	private String memberPhone;
+	private String enrollDate;
+	
+	//Mybatis 동적 쿼리 테스트 시, 임의 플래그 변수 생성
+	private String sFlag1;
+	private String sFlag2;
+	private String sFlag3;
+	private String sFlag4;
+	private String sFlag5;
+	private String sFlag6;
+	private String sFlag7;	
+	
 	public Member() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	private String memberNo;
+	
 	public Member(String memberNo, String memberId, String memberPw, String memberName, String memberEmail,
 			String memberAddr, int memberLevel, String memberPhone, String enrollDate, String sFlag1, String sFlag2,
 			String sFlag3, String sFlag4, String sFlag5, String sFlag6, String sFlag7) {
@@ -31,12 +50,7 @@ public class Member {
 		this.sFlag6 = sFlag6;
 		this.sFlag7 = sFlag7;
 	}
-	private String memberId;
-	private String memberPw;
-	private String memberName;
-	private String memberEmail;
-	private String memberAddr;
-	private int memberLevel;
+	
 	public String getMemberNo() {
 		return memberNo;
 	}
@@ -133,15 +147,4 @@ public class Member {
 	public void setsFlag7(String sFlag7) {
 		this.sFlag7 = sFlag7;
 	}
-	private String memberPhone;
-	private String enrollDate;
-	
-	//Mybatis 동적 쿼리 테스트 시, 임의 플래그 변수 생성
-	private String sFlag1;
-	private String sFlag2;
-	private String sFlag3;
-	private String sFlag4;
-	private String sFlag5;
-	private String sFlag6;
-	private String sFlag7;	
 }
