@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -31,15 +32,25 @@
 	<hr>
 	
 	
-	<c:if test="${empty sessionScope.loginMember }"> <!--세션에 유저를 등록.(값을 가져다 쓰기 위해) -->
+	<c:if test="${empty sessionScope.loginMember}"> <!--세션에 유저를 등록.(값을 가져다 쓰기 위해) -->
 		<h3>
 			<a href="/member/loginFrm">로그인 페이지로 이동</a>
 		</h3>
 	</c:if>	
 	<c:if test="${not empty sessionScope.loginMember}">
+		<h3>${sessionScope.loginMember.memberName}님 환영합니다!</h3>
 		<ul>
 			<li><a href="/member/allMember">전체회원조회</a></li>
+			<li><a href="/member/mypage">마이페이지</a></li>
+			<li><a href="/member/logout">로그아웃</a></li>
+			<li><a href="/member/allMemberPage?reqPage=1">전체회원조회(페이징)</a></li>
+			
+			<c:if test="${sessionScope.loginMember.memberLevel == 1}">
+				<li><a href="/member/adminPage">관리자 페이지</a></li>
+			</c:if>
+			<li><a href="/views/dynamicQueryTest.jsp">마이바티스 동적 쿼리 테스트</a></li>
 		</ul>
 	</c:if>
+	
 </body>
 </html>

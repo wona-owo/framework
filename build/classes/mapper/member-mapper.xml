@@ -1,95 +1,238 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="member">
-		<!-- namespace : mapper.xml을 식별할 수 있는 값 -->
-		
-		<!-- 
-		
-		[표현식]
-		
-		<SQL 종류
-		id=""						//현재 mapper.xml에서 각 SQL을 식별할 수 있는 값
-		parameterType=""			//DAO에서 SQL 호출하며 전달한 파라미터의 자료형
-		resultType=""				//SQL 수행결과를 저장할 Java 자료형
-		
-		실제 수행할 SQL
-		
-		</SQL 종류>
-		
-		[특징]
-		
-		1) SELECT 결과의 각 컬럼값을, Java 객체 변수명과 일치시키면 자동으로 값이 세팅된다.
-		2) 전달된 파라미터(Member 객체)를 SQL에 바인딩 하기 위해, #{필드명}를 사용한다.
-			-> #{memberId}		->   'user01'
-			-> #{memberPw}      ->   '1234'
-			-> ${memberId}      ->   user01    -> SQL Injection 보안상 권장되지 않는다.
-		3) SQL문 마지막에 세미콜론(;)은 작성하지 않는다.
-		
-		 	
-		 -->
-		 
-	<!-- 회원 정보 조회(로그인) -->
-	<select id="selectOneMember" 
-	parameterType="kr.or.iei.member.model.vo.Member" 
-	resultType="kr.or.iei.member.model.vo.Member">
-	select member_no as memberNo,
-		   member_id as memberId,
-		   member_pw as memberPw,
-		   member_name as memberName,
-		   member_addr as memberAddr,
-		   member_email as memberEmail,
-		   member_phone as memberPhone,
-		   enroll_date as enrollDate
-	  from tbl_member
-	where member_id = #{memberId}
-	  and member_pw = #{memberPw}
-	</select>
+	<!-- namespace : mapper.xml을 식별할 수 있는 값 -->
+
+	<!-- [표현식] 
 	
+		<SQL 종류 
+		id="" 				   //현재 mapper.xml에서 각 SQL을 식별할 수 있는 값 
+		parameterType=""	   //DAO에서 SQL 호출하며 전달한 파라미터의 자료형 
+		resultType="" 		   //SQL 수행결과를 저장할 Java 자료형 
+		
+		실제 수행할 SQL 
+		
+		</SQL 종류> 
+		
+		
+		[특징] 
+		1) SELECT 결과의 각 컬럼값을, Java 객체 변수명과 일치시키면 자동으로 값이 세팅된다. 
+		2) 전달된 파라미터(Member 객체)를 SQL에 바인딩 하기 위해, #{필드명}를 사용한다. 
+		-> #{memberId} -> 'user01' 
+		-> #{memberPw} -> '1234' 
+		-> ${memberId} -> user01 -> SQL Injection 보안상 권장되지 않는다. 
+		3) SQL문 마지막에 세미콜론(;)은 작성하지 않는다. 
+		4) parameterType, resultType에 아래 "member"와 같이 별칭을 사용하려면,
+		   mybatis-config.xml에 typeAlias 설정을 해야 한다.
+		-->
+
+	<!-- 회원 정보 조회(로그인) -->
+	<select id="selectOneMember"
+		parameterType="member"
+		resultType="member">
+		select member_no as memberNo,
+			member_id as memberId,
+			member_pw as memberPw,
+			member_name as memberName,
+			member_addr as memberAddr,
+			member_email as memberEmail,
+			member_phone as memberPhone,
+			member_level as memberLevel,
+			enroll_date as enrollDate
+			from tbl_member
+		where member_id = #{memberId}
+			and member_pw = #{memberPw}
+	</select>
+
 	<!-- 회원 정보 등록 -->
 	<!-- 행의 갯수가 리턴되므로 int 타입인 insert 결과타입은 생략 가능(당연히) -->
-	<insert id="insertMember" 
-	parameterType="kr.or.iei.member.model.vo.Member">
-	insert into tbl_member 
-				(
-				 member_no, 
-				 member_id, 
-				 member_pw, 
-				 member_name, 
-				 member_addr,
-				 member_email,
-				 member_phone,
-				 member_level, 
-				 enroll_date 
-				 ) 
-				values 
-				(  
-				seq_member.nextval,
-				#{memberId},
-				#{memberPw},
-				#{memberName},
-				#{memberAddr},
-				#{memberEmail},
-				#{memberPhone},
-				default,
-				sysdate
-				)
-	
+	<insert id="insertMember"
+		parameterType="member">
+		insert into tbl_member
+			(
+			member_no,
+			member_id,
+			member_pw,
+			member_name,
+			member_addr,
+			member_email,
+			member_phone,
+			member_level,
+			enroll_date
+			)
+			values
+			(
+			seq_member.nextval,
+			#{memberId},
+			#{memberPw},
+			#{memberName},
+			#{memberAddr},
+			#{memberEmail},
+			#{memberPhone},
+			default,
+			sysdate
+			)
+
 	</insert>
-	
+
 	<!-- 전체 회원 조회 -->
 	<select id="selectAllMember"
-	resultType="kr.or.iei.member.model.vo.Member">
-	<!-- List로 관리되는 객체의 자료형을 작성하면 된다. (결과적으로 Member) -->
-	select member_no as memberNo,
-	       member_id as memberId,
-	       member_pw as memberPw,
-	       member_name as memberName,
-	       member_addr as memberAddr,
-	       member_email as memberEmail,
-	       member_level as memberLevel,
-	       member_phone as memberPhone,
-	       enroll_date as enrollDate
-	  from tbl_member
-	  order by 1
+		resultType="member">
+		<!-- List로 관리되는 객체의 자료형을 작성하면 된다. (결과적으로 Member) -->
+		select member_no as memberNo,
+			member_id as memberId,
+			member_pw as memberPw,
+			member_name as memberName,
+			member_addr as memberAddr,
+			member_email as memberEmail,
+			member_level as memberLevel,
+			member_phone as memberPhone,
+			enroll_date as enrollDate
+			from tbl_member
+		order by 1
 	</select>
+
+	<!-- 회원 정보 수정 
+	  어떠한 update SQL도,무조건 변경된 행의 "갯수"가 반환되므로, resultType은 생략 -->
+	<update id="updateMember"
+		parameterType="member">
+		update tbl_member
+			set member_pw = #{memberPw},
+			member_name = #{memberName},
+			member_email = #{memberEmail},
+			member_addr = #{memberAddr},
+			member_phone = #{memberPhone}
+		where member_no = #{memberNo}
+	</update>
+	
+	<!-- 회원 정보 삭제
+	
+		===================================================
+				자료형			mybatis 별칭
+		===================================================
+			   String			  string
+			   Map				  map
+			   HashMap            hashmap  (map이라고 써도 동작은 함)
+			   Date				  date
+			   
+			   int				  _int   (언더바 빼면 Integer)
+			   short			  _short
+			   byte				  _byte
+			   float			  _float
+			   double             _double
+			   
+			
+	 -->
+	<delete id="deleteMember" 
+		parameterType="string">
+		delete from tbl_member where member_no = #{_string} <!-- 원시 자료형은 이름을 임의로 정해도 바인딩 가능
+														         보통은 언더바를 붙이거나, 변수명이랑 통일해준다 -->
+	</delete>
+	
+	<!-- 전체 회원 조회(페이징) 
+	
+		DAO에서 전달한 파라미터 자료형이, HashMap일 때
+		parameterType에 map or hashmap 작성
+	 -->
+	 <select id="selectAllMemberPage"
+	    parameterType="hashmap"
+	 	resultType="member"> <!-- 관리되는 row의 자료형 -->
+	   select member_no as memberNo,
+			  member_id as memberId,
+			  member_pw as memberPw,
+	 		  member_name as memberName,
+	 		  member_addr as memberAddr,
+	 		  member_phone as memberPhone,
+	 		  member_email as memberEmail,
+	 		  member_level as memberLevel,
+	 		  enroll_date as enrollDate
+	    from   
+	     (
+		   select rownum as rnum, a.*
+		    from
+	    		(
+			 	select member_no,
+			 		   member_id,
+			 		   member_pw,
+			 		   member_name,
+			 		   member_addr,
+			 		   member_phone,
+			 		   member_email,
+			 		   member_level,
+			 		   enroll_date
+			   from tbl_member
+			   order by 1
+			   ) a
+		   ) a
+	 where rnum between #{start} and #{end}
+	 </select>
+	
+	<!-- 전체회원조회(페이징) - 전체 회원 수
+	-->
+	<select id="selectTotalCount"
+	resultType="_int">
+	select count(*)
+	 from tbl_member
+	</select>
+	
+	<!-- 회원 등급 변경
+	 -->
+	 <update id="chgMemberLevel"
+	 parameterType="member">
+	 update tbl_member
+	    set member_level = #{memberLevel}
+	    where member_no = #{memberNo}
+	 </update>
+	 
+	 <!-- 동적 SQL - IF Test -->
+	 <select id = "selDynamicIfTest"
+	 parameterType="member"
+	 resultType="member">
+	 select <if test="sFlag1 != null and sFlag1 == 'on'">
+	 		member_no as memberNo,
+	 		</if>
+	 		<if test="sFlag2 != null and sFlag2 == 'on'">
+	 		member_id as memberId,
+	 		</if>
+	 		<if test="sFlag3 != null and sFlag3 == 'on'">
+	 		member_name as memberName,
+	 		</if>
+	 		<if test="sFlag4 != null and sFlag4 == 'on'">
+	 		member_email as memberEmail,
+	 		</if>
+	 		<if test="sFlag5 != null and sFlag5 == 'on'">
+	 		member_phone as memberPhone,
+	 		</if>
+	 		'a'
+	   from tbl_member
+	 </select>
+	 
+	 <!-- 동적 SQL = For Test
+	 	  DAO -> XML 전달 자료형 : String 배열 
+	 	  
+	 	  collection : 전달된 파라미터 자료형 (배열 : array, List : list)
+	 	  item : foreach 태그 내부에서 사용할 요소의 임의 명칭
+	 	  separator : 각 요소들을 구분할 구분자 값
+	 	  open : 첫 요소값 삽입 이전에 삽입할 값
+	 	  close : 마지막 요소값 삽입 후, 삽입할 값
+	  -->
+	 <select id="selDynamicForTest"
+	 parameterType="map"
+	 resultType="member">
+	 select member_no as memberNo,
+	 		member_id as memberId,
+	 		member_pw as memberPw,
+	 		member_name as memberName,
+	 		member_addr as memberAddr,
+	 		member_email as memberEmail,
+	 		member_phone as memberPhone,
+	 		member_level as memberLevel,
+	 		enroll_date as enrollDate
+	 from tbl_member
+	 where member_id in
+	 <foreach collection="array" item="id" open="(" separator="," close=")">
+	 #{id}
+	 </foreach>
+	 <!-- 위의 foreach 문으로 동적 쿼리문 생성. 구분자 넣고 괄호 넣고 순회하는 식으로 생성한다. -->
+	 </select>
 </mapper>

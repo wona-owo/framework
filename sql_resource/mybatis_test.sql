@@ -6,7 +6,7 @@ create table tbl_member(
     member_email varchar2(100) unique not null,
     member_phone char(13) not null,
     member_addr varchar2(200) not null,
-    member_level number default 3 not null,
+    member_lebel number default 3 not null,
     enroll_date date default sysdate not null
 );
 

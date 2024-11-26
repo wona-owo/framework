@@ -1,5 +1,7 @@
 package kr.or.iei.member.model.dao;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
@@ -30,6 +32,34 @@ public class MemberDao {
 	public List<Member> selectAllMember(SqlSession session) {
 		return session.selectList("member.selectAllMember");
 		
+	}
+
+	public int updateMember(SqlSession session, Member m) {
+		return session.update("member.updateMember", m);
+	}
+
+	public int deleteMember(SqlSession session, String memberNo) {
+		return session.delete("member.deleteMember", memberNo);
+	}
+
+	public List<Member> selectAllMemberPage(SqlSession session, HashMap<String, Integer> map) {
+		return session.selectList("member.selectAllMemberPage", map);
+	}
+
+	public int selectTotalCount(SqlSession session) {
+		return session.selectOne("member.selectTotalCount");
+	}
+
+	public int chgMemberLevel(SqlSession session, Member m) {
+		return session.update("member.chgMemberLevel", m);
+	}
+
+	public List<Member> selDynamicIfTest(SqlSession session, Member m) {
+		return session.selectList("member.selDynamicIfTest", m);
+	}
+
+	public List<Member> selDynamicForTest(SqlSession session, String[] members) {
+		return session.selectList("member.selDynamicForTest", members);
 	}
 
 }
