@@ -62,4 +62,37 @@ public class MemberDao {
 		return session.selectList("member.selDynamicForTest", members);
 	}
 
+
+	public List<Member> selDynamicChooseTest(SqlSession session, HashMap<String, String> map) {
+		/*
+		 ex1) session.selectList 
+		 	- 사용자 입력값 : 아이디로 검색(id), 검색어(user01) ==> 결과 row 갯수 0 or 1 	   ==> O
+		 	- 사용자 입력값 : 이름으로 검색(name), 검색어 (유저) ==> 결과 row 갯수 0 or 1 or N ==> O
+		 ex2) session.selectOne
+		 	- 사용자 입력값 : 아이디로 검색(id), 검색어(user01) ==> 결과 row 갯수 0 or 1	   ==> O
+		 	- 사용자 입력값 : 이름으로 검색(name), 검색어 (유저) ==> 결과 row 갯수 0 or 1 or N ==> X
+		 
+		 사용자가 아이디로 검색 선택 시, 일치하는 회원만 조회하니 결과는 0개 또는 1개다. 이 때 selectOne, selectList 사용 가능하다.
+		 사용자가 이름으로 검색 선택 시, 포함하는 회원들을 조회하니 결과는 0개 또는 1개 또는 N개이다. 이 때는 selectList만 사용 가능하다. 
+		 */
+		
+		return session.selectList("member.selDynamicChooseTest", map);
+		
+	}
+	
+	public List<Member> selDynamicTest1(SqlSession session, Member m) {
+		return session.selectList("member.selDynamicTest1", m);
+	}
+
+	public List<Member> selDynamicTest2(SqlSession session, String sFlag1) {
+		return session.selectList("member.selDynamicTest2", sFlag1);
+	}
+
+	public List<Member> selDynamicTest3(SqlSession session, Member m) {
+		return session.selectList("member.selDynamicTest3", m);
+	}
+
+
+
+
 }

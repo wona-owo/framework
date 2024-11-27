@@ -191,4 +191,42 @@ public class MemberService {
 		return list;
 	}
 
+
+	public ArrayList<Member> selDynamicChooseTest(String select, String keyword) {
+		SqlSession session = SqlSessionTemplate.getSqlSession();
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("select", select);		//name or id
+		map.put("keyword", keyword);    //입력한 검색어
+		ArrayList<Member> list = (ArrayList<Member>) dao.selDynamicChooseTest(session, map);
+		session.close();
+		return list;
+
+	}
+
+
+	public ArrayList<Member> selDynamicTest1(Member m) {
+		SqlSession session = SqlSessionTemplate.getSqlSession();
+		ArrayList<Member> list = (ArrayList<Member>) dao.selDynamicTest1(session, m);
+		session.close();
+		return list;
+	}
+
+
+	public ArrayList<Member> selDynamicTest2(String sFlag1) {
+		SqlSession session = SqlSessionTemplate.getSqlSession();
+		ArrayList<Member> list = (ArrayList<Member>) dao.selDynamicTest2(session, sFlag1);
+		session.close();
+		return null;
+	}
+
+
+	public ArrayList<Member> selDynamicTest3(Member m) {
+		SqlSession session = SqlSessionTemplate.getSqlSession();
+		ArrayList<Member> list = (ArrayList<Member>) dao.selDynamicTest3(session, m);
+		session.close();
+		return list;
+	}
+	
+	
+
 }

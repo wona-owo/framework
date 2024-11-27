@@ -49,6 +49,7 @@
 				<li><a href="/member/adminPage">관리자 페이지</a></li>
 			</c:if>
 			<li><a href="/views/dynamicQueryTest.jsp">마이바티스 동적 쿼리 테스트</a></li>
+			<li><a href="/board/getList?reqPage=1">게시판 목록으로</a></li>
 		</ul>
 	</c:if>
 	

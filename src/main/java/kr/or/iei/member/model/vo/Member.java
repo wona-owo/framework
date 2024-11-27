@@ -1,9 +1,5 @@
 package kr.or.iei.member.model.vo;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 public class Member {
 	private String memberNo;
 	private String memberId;
@@ -15,6 +11,9 @@ public class Member {
 	private String memberPhone;
 	private String enrollDate;
 	
+	//Mybatis 동적 쿼리 Test - 2 작성시, 추가
+	private String levelName;
+	
 	//Mybatis 동적 쿼리 테스트 시, 임의 플래그 변수 생성
 	private String sFlag1;
 	private String sFlag2;
@@ -22,16 +21,15 @@ public class Member {
 	private String sFlag4;
 	private String sFlag5;
 	private String sFlag6;
-	private String sFlag7;	
+	private String sFlag7;
 	
 	public Member() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
 	public Member(String memberNo, String memberId, String memberPw, String memberName, String memberEmail,
-			String memberAddr, int memberLevel, String memberPhone, String enrollDate, String sFlag1, String sFlag2,
-			String sFlag3, String sFlag4, String sFlag5, String sFlag6, String sFlag7) {
+			String memberAddr, int memberLevel, String memberPhone, String enrollDate, String levelName, String sFlag1,
+			String sFlag2, String sFlag3, String sFlag4, String sFlag5, String sFlag6, String sFlag7) {
 		super();
 		this.memberNo = memberNo;
 		this.memberId = memberId;
@@ -42,6 +40,7 @@ public class Member {
 		this.memberLevel = memberLevel;
 		this.memberPhone = memberPhone;
 		this.enrollDate = enrollDate;
+		this.levelName = levelName;
 		this.sFlag1 = sFlag1;
 		this.sFlag2 = sFlag2;
 		this.sFlag3 = sFlag3;
@@ -50,7 +49,6 @@ public class Member {
 		this.sFlag6 = sFlag6;
 		this.sFlag7 = sFlag7;
 	}
-	
 	public String getMemberNo() {
 		return memberNo;
 	}
@@ -105,6 +103,12 @@ public class Member {
 	public void setEnrollDate(String enrollDate) {
 		this.enrollDate = enrollDate;
 	}
+	public String getLevelName() {
+		return levelName;
+	}
+	public void setLevelName(String levelName) {
+		this.levelName = levelName;
+	}
 	public String getsFlag1() {
 		return sFlag1;
 	}
@@ -147,4 +151,13 @@ public class Member {
 	public void setsFlag7(String sFlag7) {
 		this.sFlag7 = sFlag7;
 	}
+	@Override
+	public String toString() {
+		return "Member [memberNo=" + memberNo + ", memberId=" + memberId + ", memberPw=" + memberPw + ", memberName="
+				+ memberName + ", memberEmail=" + memberEmail + ", memberAddr=" + memberAddr + ", memberLevel="
+				+ memberLevel + ", memberPhone=" + memberPhone + ", enrollDate=" + enrollDate + ", levelName="
+				+ levelName + ", sFlag1=" + sFlag1 + ", sFlag2=" + sFlag2 + ", sFlag3=" + sFlag3 + ", sFlag4=" + sFlag4
+				+ ", sFlag5=" + sFlag5 + ", sFlag6=" + sFlag6 + ", sFlag7=" + sFlag7 + "]";
+	}	
 }
+	

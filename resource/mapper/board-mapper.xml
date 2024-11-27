@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="board">
+ 	
+ 	<!-- 전체 게시물 조회 
+ 	
+ 		tbl_board.board.board_writer ==> 회원 번호
+ 		
+ 		사용자 화면에 board_writer를 그대로 출력하면, 누가 작성했는지 파악 불가하므로,
+ 		서브쿼리를 통해 작성자 ID 값을 boardWriter 변수에 할당.
+ 	-->
+	 <select id="selectAllBoardPage"
+	    parameterType="hashmap"
+	 	resultType="board"> <!-- 관리되는 row의 자료형 -->
+	   select rnum,
+	   		  board_no as boardNo,
+			  board_title as boardTitle,
+			  board_content as boardContent,
+	 		  (select member_id from tbl_member where member_no = board_writer) as boardWriter,
+	 		  read_count as readCount,
+	 		  reg_date as regDate
+	    from   
+	     (
+		   select rownum as rnum, a.*
+		    from
+	    		(
+			 	select *
+			      from tbl_board
+			   order by board_no
+			   ) a
+		   ) a
+	 where rnum between #{start} and #{end}
+	 </select>
+ 	
+ 	
+ 	<!-- 전체 게시물 갯수 조회 -->
+	<select id="selectTotalCount" resultType="_int">
+	select count(*) from tbl_board
+	</select>
+	
+	
+	
+</mapper>

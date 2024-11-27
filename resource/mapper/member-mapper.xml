@@ -235,4 +235,122 @@
 	 </foreach>
 	 <!-- 위의 foreach 문으로 동적 쿼리문 생성. 구분자 넣고 괄호 넣고 순회하는 식으로 생성한다. -->
 	 </select>
+	 
+	 <!-- 동적 SQL - Choose Test
+	    select == 'id' == 입력한 keyword와 일치하는 아이디
+	    select == 'name' == 입력한 keyword를 포함하는 이름 
+	  -->
+	 <select id="selDynamicChooseTest"
+	 parameterType="map"
+	 resultType="member">
+	 select member_no as memberNo,
+	        member_id as memberId,
+	        member_pw as memberPw,
+	        member_name as memberName,
+	        member_email as memberEmail,
+	        member_phone as memberPhone,
+	        member_addr as memberAddr,
+	        member_level as memberLevel,
+	        enroll_date as enrollDate
+	   from tbl_member
+	   <choose>
+	   	<when test="select != null and select =='id'">
+		   	where member_Id = #{keyword}
+	   	</when>
+	   	<when test="select != null and select == 'name'">
+	   		where member_name like '%' || #{keyword} || '%'
+	   	</when>
+	   </choose>
+	 </select>
+	 
+	 <select id="selDynamicTest1"
+	 parameterType="member"
+	 resultType="member">
+	  select member_no as memberNo,
+	        member_id as memberId,
+	        member_pw as memberPw,
+	        member_name as memberName,
+	        member_email as memberEmail,
+	        member_phone as memberPhone,
+	        member_addr as memberAddr,
+	        member_level as memberLevel,
+	        enroll_date as enrollDate
+	   from tbl_member
+	   <where>   
+	 	<if test="sFlag1 != null and sFlag1 != ''">
+	 or member_addr like '%' || #{sFlag1} || '%'
+	 </if>
+	 	<if test="sFlag2 != null and sFlag2 != ''">
+	 or member_addr like '%' || #{sFlag2} || '%'
+	 </if>
+	 	<if test="sFlag3 != null and sFlag3 != ''">
+	 or member_addr like '%' || #{sFlag3} || '%'
+	 </if>
+	 	<if test="sFlag4 != null and sFlag4 != ''">
+	 or member_addr like '%' || #{sFlag4} || '%'
+	 </if>
+	   </where>
+	 </select>
+	 
+	 
+	   
+	  <!-- 동적 SQL - Test 2
+	  
+	 등급명 포함 조회 체크박스 체크 시, tbl_level의 level_name도 조회
+	   --> 
+	 
+	 <select id="selDynamicTest2"
+	  parameterType="string"
+	  resultType="member">
+	  select member_no as memberNo,
+	         member_id as memberId,
+	         member_pw as memberPw,
+	         member_name as memberName,
+	         member_email as memberEmail,
+	         member_phone as memberPhone,
+	         member_addr as memberAddr,
+	         member_level as memberLevel,
+	         enroll_date as enrollDate
+	    from tbl_member
+	    <if test="sFlag != null and sFlag1 != '' ">
+	        join tbl_level on (member_level = level_code)   <!-- if시 작동하는 쿼리에 걸어주기 -->
+	   	</if>	  
+	  </select>
+	  
+	  <!-- 동적 SQL - Test 3
+	  
+	  이름 or 주소 or 전화번호 라디오 버튼 체크 후, 검색 시
+	  해당하는 컬럼값에 검색어가 포함되는 경우 조회
+	  
+	  sFlag1에 저장될 수 있는 값 : member_name, member_addr, member_Phone
+	  
+	  #{sFlag1} ==> 'member_name', 'member_addr', 'member_phone'
+	  ${sFlag1} ==> member_name, member_addr, member_phone
+	  
+	   --> 
+	  
+	  <select id="selDynamicTest3"
+	   parameterType="member"
+	   resultType="member">
+	   select member_no as memberNo,
+	          member_id as memberId,
+	          member_pw as memberPw,
+	          member_name as memberName,
+	          member_email as memberEmail,
+	          member_phone as memberPhone,
+	          member_addr as memberAddr,
+	          member_level as memberLevel,
+	          enroll_date as enrollDate
+	     from tbl_member
+	     <if test="sFlag1 != null and sFlag1 != ''">
+	     	<if test="sFlag2 != null and sFlag2 != ''">
+	    	 where ${sFlag1} like '%' || #{sFlag2} || '%'
+	    	 </if>
+	     order by ${sFlag1}
+	     </if>
+	     <!-- $로 바인딩 해줘서 컬럼명이 따옴표 없이 동적으로 들어가게끔 고정
+	          체크를 했는데 검색어를 입력하지 않은 경우에는 정렬만 해줄거. -->
+	   </select>
+	 
+	 
 </mapper>
