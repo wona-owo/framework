@@ -116,14 +116,11 @@ public class BoardService {
 		 수정하기 페이지에서, 수정 완료 후 상세보기로 이동 시     : pageGb == upd
 		 
 		 */
-		int result = -1;
+		int result = 1;
 		
 		if(pageGb.equals("sel")) {			
 			result = dao.updateReadCount(session,boardNo);
-		}
-		
-	
-		
+		}				
 		Board board = null;
 		
 		if(result > 0) {			
@@ -134,8 +131,7 @@ public class BoardService {
 		}
 		session.close();
 		return board;
-		
-		
+				
 	}
 
 	public int updateBoard(Board b) {
