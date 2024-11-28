@@ -2,12 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="board">
  	
- 	<!-- 전체 게시물 조회 
+ 	<!-- 전체 게시물 조회(페이징)
  	
  		tbl_board.board.board_writer ==> 회원 번호
  		
  		사용자 화면에 board_writer를 그대로 출력하면, 누가 작성했는지 파악 불가하므로,
  		서브쿼리를 통해 작성자 ID 값을 boardWriter 변수에 할당.
+ 		
+ 		전달 파라미터 리스트
+ 		start : 시작 번호
+ 		end : 끝 번호
+ 		srchType : 검색 조건 타입 (boardTitle or boardWriter)
+ 		srchKeyword : 검색어
  	-->
 	 <select id="selectAllBoardPage"
 	    parameterType="hashmap"
@@ -26,6 +32,16 @@
 	    		(
 			 	select *
 			      from tbl_board
+			      <if test="srchKeyword != null and srchKeyword != ''">
+			     	<choose>
+			     		<when test="srchType == 'boardTitle'">
+			     	where board_title like '%' || #{srchKeyword} || '%'
+			     		</when>
+			     		<when test="srchType =='boardWriter'">
+			     	where board_writer = (select member_no from tbl_member where member_id = #{srchKeyword})
+			     		</when>
+			     	</choose> 
+			      </if>
 			   order by board_no
 			   ) a
 		   ) a
@@ -35,9 +51,56 @@
  	
  	<!-- 전체 게시물 갯수 조회 -->
 	<select id="selectTotalCount" resultType="_int">
-	select count(*) from tbl_board
+	select count(*) 
+	from tbl_board
+		<if test="srchKeyword != null and srchKeyword != '' ">
+	     	<choose>
+	     		<when test="srchType == 'boardTitle'">
+	     	where board_title like '%' || #{srchKeyword} || '%'
+	     		</when>
+	     		<when test="srchType =='boardWriter'">
+	     	where board writer = (select member_no from tbl_member where member_id = #{srchKeyword})
+	     		</when>
+	     	</choose> 
+	      </if>
 	</select>
 	
 	
+	<delete id="deleteBoard"
+		parameterType="map">
+		delete from tbl_board
+		where board_no in
+		<foreach collection="array" item="no" open="(" separator="," close=")">
+		#{no}
+		</foreach>	
+	</delete>
+	
+	<select id="selectOneBoard" 
+	parameterType="string"
+	resultType="board">
+		select board_no as boardNo,
+			  board_title as boardTitle,
+			  board_content as boardContent,
+	 		  (select member_id from tbl_member where member_no = board_writer) as boardWriter,
+	 		  read_count as readCount,
+	 		  reg_date as regDate
+		from tbl_board
+		where board_no = #{boardNo}
+	</select>
+	
+	<update id="updateReadCount"
+	parameterType="string">
+	update tbl_board
+	   set read_count = read_count + 1
+	 where board_no = #{boardNo}
+	</update>
+	
+	<update id="updateBoard"
+	parameterType="board">
+	update tbl_board
+	   set board_title = #{boardTitle},
+	       board_content = #{boardContent}
+	 where board_no = #{boardNo}
+	</update>
 	
 </mapper>

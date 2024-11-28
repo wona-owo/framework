@@ -1,30 +1,25 @@
 package kr.or.iei.board.controller;
 
 import java.io.IOException;
-
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import kr.or.iei.board.model.dao.BoardPageData;
 import kr.or.iei.board.model.service.BoardService;
 
-
-
 /**
- * Servlet implementation class GetListServlet
+ * Servlet implementation class BoardDeleteServlet
  */
-@WebServlet("/board/getList")
-public class GetListServlet extends HttpServlet {
+@WebServlet("/board/delete")
+public class BoardDeleteServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GetListServlet() {
+    public BoardDeleteServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -34,24 +29,24 @@ public class GetListServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//1. 인코딩
-		//2. 값추출
-		int reqPage = request.getParameter("reqPage") != null ? Integer.parseInt(request.getParameter("reqPage")) : 1 ; //요청 페이지 번호
-		
-		//게시글 목록 하단에서, 검색하였을 때 전달한 파라미터
-		String srchType = request.getParameter("srchType");		  //검색 조건(제목 or 작성자)
-		String srchKeyword = request.getParameter("srchKeyword"); //검색어
-		
+		//2. 값 추출
+		String [] delNo = request.getParameterValues("delNo");
 		//3. 로직
-		BoardService service = new BoardService(); 
-		BoardPageData pd = service.selectBoardList(reqPage, srchType, srchKeyword);
-				
-		//4. 결과처리
-		request.setAttribute("srchType", srchType);
-		request.setAttribute("srchKeyword", srchKeyword);
+		BoardService service = new BoardService();
+		int result = service.deleteBoard(delNo);
 		
-		request.setAttribute("boardList", pd.getList());
-		request.setAttribute("pageNavi", pd.getPageNavi());
-		request.getRequestDispatcher("/WEB-INF/views/board/list.jsp").forward(request, response);
+		//4. 결과처리
+		if(result > 0) {
+			request.setAttribute("title", "알림");
+			request.setAttribute("text", "게시글이 삭제되었습니다.");
+			request.setAttribute("icon", "success");
+		}else {
+			request.setAttribute("title", "알림");
+			request.setAttribute("text", "게시글 삭제 중 오류 발생");
+			request.setAttribute("icon", "error");
+		}
+		request.setAttribute("loc", "/board/getList?reqPage=1");
+		request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
 	}
 
 	/**
